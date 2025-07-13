@@ -10,9 +10,3 @@ definePageMeta({
 
 
 </script>
-
-<style scoped>
-
-
-
-</style>

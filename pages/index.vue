@@ -1,5 +1,12 @@
 <template>
-    <div class="flex flex-col gap-8 min-h-dvh w-full p-2">
+    <div class="flex flex-col gap-8 min-h-dvh w-full p-2 relative">
+
+        <div class="absolute top-4 left-4 flex  rounded-full bg-brand-400/10 text-white px-4 py-2">
+            <NuxtLink to="/login" class="flex items-center gap-2">
+                <Icon name="mdi:login" size="20" />
+                <span class="text-sm">Painel</span>
+            </NuxtLink>
+        </div>
 
         <div class="ml-12 mt-20">
             <img src="../assets/images/logo.png" alt="Logo">
@@ -15,14 +22,14 @@
                     <p class="text-center text-sm font-bold uppercase">sábado | 27/09/2025 | às 13:30</p>
                 </div>
 
-                <p class="text-center text-sm uppercase">"Para que todos vejam, e saibam, e considerem, e juntamente
-                    entendam que a mão do Senhor fez isto." isaías 41:20</p>
+                <p class="text-center text-sm italic">"Para que todos vejam, e saibam, e considerem, e juntamente
+                    entendam que a mão do Senhor fez isto."<br>Isaías 41:20</p>
 
             </div>
 
         </div>
 
-        <SharedNavBar :buttons="navButtons" position="default" placement="default" variant="floating"/>
+        <SharedNavBar :buttons="navButtons" position="default" placement="default" variant="floating" />
 
     </div>
 </template>
@@ -30,7 +37,7 @@
 <script setup>
 
 definePageMeta({
-  layout: 'default'
+    layout: 'default'
 })
 
 const navButtons = [
@@ -62,14 +69,17 @@ const navButtons = [
         modalProps: {
             title: 'Lista de Presentes',
             content: `
-        <div class="text-center space-y-4">
-          <p class="text-gray-600">Sua presença já é o nosso maior presente!</p>
-          <p class="text-sm">Mas se quiser contribuir, ficaremos muito gratos:</p>
-          <div class="bg-gray-50 p-4 rounded-lg">
-            <p class="font-semibold">PIX: casamento@exemplo.com</p>
-            <p class="text-sm text-gray-500">Paulo & Isa</p>
-          </div>
-        </div>
+            <p class="text-brand-800 text-center mb-8 text-sm">Se você quiser nos ajudar a construir nosso futuro, pode
+                contribuir com nossa lista de presentes ou fazer uma doação para nossa nova jornada.</p>
+        <div class="w-full flex flex-col gap-4">
+                <a href="/gift"
+                    class="block w-full text-center py-3 rounded-lg font-bold bg-brand-400 !text-brand-900 hover:bg-brand-300 transition-colors">
+                    Lista de Presentes</a>
+                <a href="/donate"
+                    class="block w-full text-center py-3 rounded-lg font-bold bg-brand-200 text-brand-800 hover:bg-brand-100 transition-colors">
+                    Doação
+                </a>
+            </div>
       `
         }
     },
@@ -82,12 +92,10 @@ const navButtons = [
 ]
 
 onMounted(() => {
-  document.body.classList.add('theme-bg')
+    document.body.classList.add('theme-bg')
 })
 onUnmounted(() => {
-  document.body.classList.remove('theme-bg')
+    document.body.classList.remove('theme-bg')
 })
 
 </script>
-
-<style lang="scss" scoped></style>
