@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center m-4 p-4 bg-white rounded-lg">
-        <form action=" " @submit.prevent="handleSubmit" class="flex flex-col justify-center gap-4">
+        <form @submit.prevent="handleSubmit" class="flex flex-col justify-center gap-4">
             <div class="flex flex-col gap-2">
                 <label for="name">Nome Completo</label>
                 <input type="text" id="name" placeholder="Digite seu nome completo" v-model="form.name">
@@ -35,7 +35,8 @@
 <script setup lang="ts">
 import { rsvpRequestSchema, type RsvpRequest } from '~/dtos/rsvp/rsvpRequest'
 import Swal from 'sweetalert2'
-import { useRouter } from 'vue-router'
+
+const emit = defineEmits(['rsvpSubmit'])
 
 const form = reactive < RsvpRequest > ({
     name: '',
@@ -43,8 +44,6 @@ const form = reactive < RsvpRequest > ({
     whatsapp: '',
     guestName: '',
 })
-
-const router = useRouter()
 
 const errors = reactive < Record < string, string>> ({})
 
@@ -91,10 +90,9 @@ const handleSubmit = () => {
         return
     }
     isLoading.value = true
-    console.log(validated.data)
     setTimeout(() => {
+        emit('rsvpSubmit', validated.data)
         isLoading.value = false
-        router.push('/confirmation')
     }, 3000)
 }
 
