@@ -45,7 +45,7 @@ const gifts = [
         quantityGifted: 0,
     },
     {
-        name: 'Vibrador 30cm PRETO',
+        name: 'Panela de pressão',
         isAvailable: true,
         imageUrl: '',
         price: "199,99",
