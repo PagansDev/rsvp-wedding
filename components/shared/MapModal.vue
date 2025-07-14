@@ -7,11 +7,13 @@
 
                 <!-- Modal Content -->
                 <div class="absolute bottom-0 left-0 right-0">
-                    <div ref="modalRef" class="bg-brand-50 rounded-t-2xl shadow-2xl h-[85vh] overflow-hidden" @click.stop>
+                    <div ref="modalRef" class="bg-brand-50 rounded-t-2xl shadow-2xl h-[60vh] overflow-hidden"
+                        @click.stop>
                         <!-- Header with drag indicator -->
                         <div class="flex flex-col items-center p-4 border-b border-gray-200">
-                            <div class="w-12 h-1 bg-brand-300 rounded-full cursor-grab active:cursor-grabbing mb-3"
-                                @mousedown="startDrag" @touchstart="startDrag"></div>
+                            <div class="w-35 h-2 bg-brand-300 rounded-full cursor-grab active:cursor-grabbing mb-3"
+                                @mousedown="startDrag" @touchstart="startDrag" @touchmove="handleTouchMove"
+                                @touchend="endDrag" @touchcancel="endDrag"></div>
 
                             <!-- Close button -->
                             <button @click="closeModal"
@@ -54,28 +56,48 @@ const modalRef = ref<HTMLElement>()
 const isDragging = ref(false)
 const startY = ref(0)
 const currentY = ref(0)
+const isTouch = ref(false)
 
 const handleBackdropClick = () => {
     closeModal()
 }
 
 const startDrag = (e: MouseEvent | TouchEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
     isDragging.value = true
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    isTouch.value = 'touches' in e
+
+    const clientY = isTouch.value ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY
     startY.value = clientY
     currentY.value = clientY
 
-    // Add event listeners
-    document.addEventListener('mousemove', handleDrag)
-    document.addEventListener('mouseup', endDrag)
-    document.addEventListener('touchmove', handleDrag)
-    document.addEventListener('touchend', endDrag)
+    // Add event listeners only for mouse events
+    if (!isTouch.value) {
+        document.addEventListener('mousemove', handleDrag)
+        document.addEventListener('mouseup', endDrag)
+    }
 }
 
-const handleDrag = (e: MouseEvent | TouchEvent) => {
+const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging.value || !modalRef.value) return
 
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY
+    e.preventDefault()
+    e.stopPropagation()
+
+    const clientY = e.touches[0].clientY
+    currentY.value = clientY
+
+    const deltaY = currentY.value - startY.value
+    if (deltaY > 0) {
+        modalRef.value.style.transform = `translateY(${deltaY}px)`
+    }
+}
+
+const handleDrag = (e: MouseEvent) => {
+    if (!isDragging.value || !modalRef.value || isTouch.value) return
+
+    const clientY = e.clientY
     currentY.value = clientY
 
     const deltaY = currentY.value - startY.value
@@ -98,20 +120,17 @@ const endDrag = () => {
     }
 
     isDragging.value = false
+    isTouch.value = false
 
     // Remove event listeners
     document.removeEventListener('mousemove', handleDrag)
     document.removeEventListener('mouseup', endDrag)
-    document.removeEventListener('touchmove', handleDrag)
-    document.removeEventListener('touchend', endDrag)
 }
 
 // Cleanup on unmount
 onUnmounted(() => {
     document.removeEventListener('mousemove', handleDrag)
     document.removeEventListener('mouseup', endDrag)
-    document.removeEventListener('touchmove', handleDrag)
-    document.removeEventListener('touchend', endDrag)
 })
 </script>
 
@@ -129,5 +148,19 @@ onUnmounted(() => {
 .modal-enter-from .bg-white,
 .modal-leave-to .bg-white {
     transform: translateY(100%);
+}
+
+/* Prevenir pull-to-refresh */
+.bg-brand-50 {
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+}
+
+/* Área de drag específica */
+.cursor-grab {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 </style>
