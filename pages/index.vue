@@ -1,14 +1,13 @@
 <template>
-    <div class="flex flex-col gap-8 min-h-dvh w-full p-2 relative">
+    <div class="flex flex-col  md:justify-center md:items-center gap-8 min-h-dvh w-full p-2 relative">
 
-        <div class="absolute top-4 left-4 flex  rounded-full bg-brand-400/10 text-white px-4 py-2">
+        <div class="absolute top-4 left-4 flex justify-center items-center rounded-full bg-brand-400/10 text-white p-3">
             <NuxtLink to="/login" class="flex items-center gap-2">
                 <Icon name="mdi:login" size="20" />
-                <span class="text-sm">Painel</span>
             </NuxtLink>
         </div>
 
-        <div class="ml-12 mt-20">
+        <div class="ml-12 mt-20 md:mt-32 md:ml-0" >
             <img src="../assets/images/logo.png" alt="Logo">
 
         </div>
@@ -16,7 +15,7 @@
         <div class="flex flex-col">
 
             <div class="flex flex-col gap-12">
-                <p class="text-center text-sm uppercase">Convidam para a celebração do nosso casamento</p>
+                <p class="text-center text-sm  font-bold uppercase text-brand-800">Convidam para a celebração do nosso casamento</p>
                 <div class="flex flex-row gap-2 items-center justify-center">
                     <Icon name="mdi:calendar-check" size="20" />
                     <p class="text-center text-sm font-bold uppercase">sábado | 27/09/2025 | às 13:30</p>
