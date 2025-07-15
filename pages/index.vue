@@ -15,7 +15,7 @@
         <div class="flex flex-col">
 
             <div class="flex flex-col gap-12">
-                <p class="text-center text-sm  font-bold uppercase text-brand-800">Convidam para a celebração do nosso casamento</p>
+                <p class="text-center text-sm  font-bold uppercase text-brand-600">Convidam para a celebração do nosso casamento</p>
                 <div class="flex flex-row gap-2 items-center justify-center">
                     <Icon name="mdi:calendar-check" size="20" />
                     <p class="text-center text-sm font-bold uppercase">sábado | 27/09/2025 | às 13:30</p>
