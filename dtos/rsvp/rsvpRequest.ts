@@ -16,16 +16,14 @@ const phoneNumberSchema = z
   );
 
 export const rsvpRequestSchema = z.object({
-
-  name: z.string()
-    .min(3, {
-      message: 'O nome é obrigatório',
-    }),
+  name: z.string().min(3, {
+    message: 'O nome é obrigatório',
+  }),
   hasGuest: z.boolean(),
-
   guestName: z.string().optional().nullable(),
-
   whatsapp: phoneNumberSchema,
-})
+  document: z.string().optional().nullable(),
+  guestDocument: z.string().optional().nullable(),
+});
 
 export type RsvpRequest = z.infer<typeof rsvpRequestSchema>;

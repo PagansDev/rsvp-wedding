@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="max-w-md mx-auto p-4 pt-2 pb-10">
-    <AdminTabs />
+    <AdminTabs/>
   </div>
 </template>
 
