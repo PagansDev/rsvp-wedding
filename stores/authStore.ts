@@ -41,10 +41,12 @@ export const useAuthStore = defineStore('auth', () => {
     setError(null);
     try {
       const response = await authService.loginWithGoogle();
+
       if (response.error) {
         setError(response.error);
         return false;
       }
+
       return true;
     } catch (err) {
       const errorMessage =
@@ -56,27 +58,33 @@ export const useAuthStore = defineStore('auth', () => {
     }
   };
 
-  const handleAuthCallback = async () => {
+  const handleAuthCallback = async (hash?: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await authService.handleAuthCallback();
+      const response = await authService.handleAuthCallback(hash);
+
       if (response.error) {
         setError(response.error);
         return false;
       }
+
       if (response.user) {
         const authValidation = authorizationService.validateUserAuthorization(
           response.user.email
         );
+
         if (!authValidation.isAuthorized) {
           setError(authValidation.message || 'Usuário não autorizado');
           await logout();
           return false;
         }
         setUser(response.user);
+        return true;
+      } else {
+        setError('Nenhum usuário encontrado na sessão');
+        return false;
       }
-      return true;
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Erro desconhecido';
@@ -124,14 +132,18 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const initializeAuth = async () => {
-    if (process.server) return;
+    if (process.server) {
+      return;
+    }
     try {
       if (authService.isAuthenticated()) {
         const storedUser = authService.getStoredUser();
+
         if (storedUser) {
           const authValidation = authorizationService.validateUserAuthorization(
             storedUser.email
           );
+
           if (!authValidation.isAuthorized) {
             await logout();
             return;
@@ -142,7 +154,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
       }
     } catch (error) {
-      // silent error
+      console.error('Error in initializeAuth:', error);
     }
   };
 

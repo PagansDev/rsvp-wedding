@@ -20,6 +20,7 @@ export const authService = {
       const redirectUrl = process.client
         ? `${window.location.origin}/auth/callback`
         : '/auth/callback';
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -31,9 +32,9 @@ export const authService = {
         return { user: null, session: null, error: error.message };
       }
 
-      // OAuth flow: user and session will be handled in callback
       return { user: null, session: null, error: undefined };
     } catch (error) {
+      console.error('Error in loginWithGoogle:', error);
       return {
         user: null,
         session: null,
@@ -42,9 +43,74 @@ export const authService = {
     }
   },
 
-  async handleAuthCallback(): Promise<AuthResponse> {
+  async handleAuthCallback(hash?: string): Promise<AuthResponse> {
     try {
       const supabase = getSupabase();
+
+      // Try to get hash from sessionStorage first, then passed parameter, then window.location
+      const storedHash = process.client
+        ? sessionStorage.getItem('oauth_hash')
+        : null;
+
+      const hashToProcess = storedHash || hash || window.location.hash;
+
+      // Process OAuth callback from hash
+      if (process.client && hashToProcess) {
+        const hashParams = new URLSearchParams(hashToProcess.substring(1));
+        const accessToken = hashParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token');
+
+        if (accessToken) {
+          const { data: sessionData, error: sessionError } =
+            await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken || '',
+            });
+
+          if (sessionError) {
+            return { user: null, session: null, error: sessionError.message };
+          }
+
+          if (sessionData.session && sessionData.user) {
+            const user: AuthUser = {
+              id: sessionData.user.id,
+              email: sessionData.user.email || '',
+              name: sessionData.user.user_metadata?.full_name,
+              avatar_url: sessionData.user.user_metadata?.avatar_url,
+            };
+
+            try {
+              localStorage.setItem(
+                'auth_token',
+                sessionData.session.access_token
+              );
+              localStorage.setItem(
+                'auth_refresh_token',
+                sessionData.session.refresh_token
+              );
+              localStorage.setItem('auth_user', JSON.stringify(user));
+
+              // Clean up stored hash
+              if (process.client) {
+                sessionStorage.removeItem('oauth_hash');
+              }
+            } catch (error) {
+              console.error(
+                'Error saving to localStorage:',
+                error
+              );
+            }
+
+            return {
+              user,
+              session: sessionData.session,
+              error: undefined,
+            };
+          }
+        }
+      }
+
+      // Fallback to normal session check
       const { data, error } = await supabase.auth.getSession();
 
       if (error) {
@@ -70,7 +136,10 @@ export const authService = {
             localStorage.setItem('auth_user', JSON.stringify(user));
           }
         } catch (error) {
-          console.error('Error saving data to localStorage:', error);
+          console.error(
+            'Error saving data to localStorage:',
+            error
+          );
         }
       }
 
@@ -80,6 +149,7 @@ export const authService = {
         error: undefined,
       };
     } catch (error) {
+      console.error('Error in handleAuthCallback:', error);
       return {
         user: null,
         session: null,

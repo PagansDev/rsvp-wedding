@@ -32,7 +32,6 @@ const emit = defineEmits<{
 const { openModal } = useModal()
 
 const handleClick = (event: MouseEvent) => {
-    console.log('BaseTriggerButton: openModal chamado com:', props.modalType, props.modalProps)
     openModal(props.modalType, props.modalProps)
     emit('click', event)
 }

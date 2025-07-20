@@ -9,7 +9,8 @@ import Swal from 'sweetalert2'
 const router = useRouter()
 
 const handleRsvpSubmit = (form: RsvpRequest) => {
-    console.log(form)
+
+    // TODO: Implement API call
     Swal.fire({
         title: 'Sucesso!',
         text: 'RSVP enviado com sucesso!',

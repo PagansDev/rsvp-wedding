@@ -53,11 +53,6 @@ import { useModal } from '@/composables/Modal';
 
 const { isOpen, modalType, modalProps, closeModal } = useModal();
 
-// Debug logs
-watch([isOpen, modalType], ([newIsOpen, newModalType]) => {
-    console.log('DrawerModal: Estado mudou', { isOpen: newIsOpen, modalType: newModalType, modalProps: modalProps.value });
-}, { immediate: true });
-
 const drawerRef = ref<HTMLElement>();
 const isDragging = ref(false);
 const startY = ref(0);

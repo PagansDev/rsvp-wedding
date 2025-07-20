@@ -4,13 +4,10 @@ export default defineNuxtRouteMiddleware((to) => {
     try {
       const authStore = useAuthStore();
 
-      // Wait a bit for the store to be initialized
-      setTimeout(() => {
-        // If user is already authenticated, redirect to admin
-        if (authStore.isAuthenticated) {
-          navigateTo('/admin');
-        }
-      }, 1500);
+      // Check if user is already authenticated
+      if (authStore.isAuthenticated) {
+        return navigateTo('/admin');
+      }
     } catch (error) {
       console.error('Error in redirection middleware:', error);
     }

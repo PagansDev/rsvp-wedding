@@ -25,6 +25,7 @@ import Swal from 'sweetalert2';
 
 definePageMeta({
   layout: 'texture',
+  middleware: ['redirect-if-authenticated']
 });
 
 const handleLoginSuccess = () => {

@@ -97,10 +97,10 @@ onMounted(async () => {
 async function loadGift() {
     try {
         loading.value = true;
-        // TODO: Implementar chamada da API
+        // TODO: Implement API call
         // const response = await $fetch<GiftResponse>(`/api/gifts/${route.params.id}`);
 
-        // Mock data para teste
+        // Mock data for testing
         const mockGift: GiftResponse = {
             id: Number(route.params.id),
             name: 'Panela de Pressão',
@@ -127,7 +127,7 @@ async function loadGift() {
         };
     } catch (error) {
         console.error('Erro ao carregar presente:', error);
-        // TODO: Mostrar toast de erro
+        // TODO: Show error toast
     } finally {
         loading.value = false;
     }
@@ -137,20 +137,14 @@ async function handleSubmit() {
     try {
         loading.value = true;
 
-        if (isNew.value) {
-            // TODO: Implementar criação
-            // await $fetch('/api/gifts', { method: 'POST', body: form.value });
-            console.log('Criando presente:', form.value);
-        } else {
-            // TODO: Implementar atualização
-            // await $fetch(`/api/gifts/${route.params.id}`, { method: 'PUT', body: form.value });
-            console.log('Atualizando presente:', form.value);
-        }
+        // TODO: Implement Update Gift
+        // await $fetch(`/api/gifts/${route.params.id}`, { method: 'PUT', body: form.value });
 
+        // TODO: Show success toast
         await router.push('/admin');
     } catch (error) {
         console.error('Erro ao salvar presente:', error);
-        // TODO: Mostrar toast de erro
+        // TODO: Show error toast
     } finally {
         loading.value = false;
     }
@@ -163,14 +157,13 @@ async function handleDelete() {
 
     try {
         loading.value = true;
-        // TODO: Implementar exclusão
+        // TODO: implement Delete Gift
         // await $fetch(`/api/gifts/${route.params.id}`, { method: 'DELETE' });
-        console.log('Excluindo presente:', route.params.id);
 
         await router.push('/admin');
     } catch (error) {
         console.error('Erro ao excluir presente:', error);
-        // TODO: Mostrar toast de erro
+        // TODO: Show error toast
     } finally {
         loading.value = false;
     }

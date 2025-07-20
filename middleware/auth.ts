@@ -6,11 +6,13 @@ export default defineNuxtRouteMiddleware((to) => {
 
       // Check if user is authenticated
       if (!authStore.isAuthenticated) {
-        // If not authenticated, redirect to login
         return navigateTo('/login');
       }
     } catch (error) {
-      console.error('Authentication middleware error:', error);
+      console.error(
+        '🔴 [AUTH_MIDDLEWARE] Authentication middleware error:',
+        error
+      );
       // In case of error, redirect to login
       return navigateTo('/login');
     }
