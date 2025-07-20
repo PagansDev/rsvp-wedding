@@ -65,6 +65,50 @@ export const rsvpService = {
     }
   },
 
+  async updateRsvpStatus(
+    rsvpId: number,
+    status: string
+  ): Promise<ServiceResponse<RsvpData>> {
+    try {
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('rsvp')
+        .update({ status })
+        .eq('id', rsvpId)
+        .select()
+        .single();
+
+      if (error) {
+        return { data: null, error: error.message };
+      }
+
+      return { data: [data as RsvpData], error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
+      };
+    }
+  },
+
+  async deleteRsvp(rsvpId: number): Promise<ServiceResponse<RsvpData>> {
+    try {
+      const supabase = getSupabase();
+      const { error } = await supabase.from('rsvp').delete().eq('id', rsvpId);
+
+      if (error) {
+        return { data: null, error: error.message };
+      }
+
+      return { data: [], error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
+      };
+    }
+  },
+
   async getRsvpStats(): Promise<{
     total: number;
     withGuests: number;
@@ -72,14 +116,19 @@ export const rsvpService = {
   }> {
     try {
       const supabase = getSupabase();
-      const { data, error } = await supabase.from('rsvp').select('has_guest');
+      const { data, error } = await supabase
+        .from('rsvp')
+        .select('has_guest, status');
 
       if (error) {
         return { total: 0, withGuests: 0, withoutGuests: 0 };
       }
 
-      const total = data.length;
-      const withGuests = data.filter((rsvp) => rsvp.has_guest).length;
+      const confirmedRsvps = data.filter(
+        (rsvp) => rsvp.status === 'confirmado'
+      );
+      const total = confirmedRsvps.length;
+      const withGuests = confirmedRsvps.filter((rsvp) => rsvp.has_guest).length;
       const withoutGuests = total - withGuests;
 
       return { total, withGuests, withoutGuests };

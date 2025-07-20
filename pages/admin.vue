@@ -6,13 +6,12 @@
     </button>
   </div>
   <div class="max-w-md mx-auto p-4 pt-2 pb-10">
-    <AdminTabs/>
+    <AdminTabs />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/authStore';
-import Swal from 'sweetalert2';
 
 definePageMeta({
   layout: 'clean',
@@ -20,23 +19,6 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
-const router = useRouter();
-
-// Check if user is authorized
-onMounted(async () => {
-  if (!authStore.isUserAuthorized) {
-    await Swal.fire({
-      title: 'Acesso Negado',
-      text: 'Você não tem permissão para acessar esta área',
-      icon: 'error',
-      confirmButtonText: 'OK',
-      allowOutsideClick: false
-    });
-
-    await authStore.logout();
-    await router.push('/login');
-  }
-});
 
 const handleLogout = async () => {
   await authStore.logout();

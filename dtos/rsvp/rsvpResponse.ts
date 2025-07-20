@@ -8,6 +8,7 @@ export const rsvpResponseSchema = z.object({
   whatsapp: z.string(),
   document: z.string(),
   guest_document: z.string().nullable(),
+  status: z.string(),
   created_at: z.string(),
   updated_at: z.string().nullable(),
 });

@@ -22,31 +22,15 @@ const tabs = [
     { key: 'event', label: 'Evento', component: AdminEvent },
 ];
 
-const route = useRoute();
-const router = useRouter();
-
 const selectedTab = ref('guests');
-
-onMounted(() => {
-    if (route.query.tab && tabs.some(tab => tab.key === route.query.tab)) {
-        selectedTab.value = route.query.tab as string;
-    }
-});
 
 function selectTab(tabKey: string) {
     selectedTab.value = tabKey;
-    router.replace({ query: { ...route.query, tab: tabKey } });
 }
 
 const currentComponent = computed(() => {
     const found = tabs.find(tab => tab.key === selectedTab.value);
     return found ? found.component : AdminGuests;
-});
-
-const emit = defineEmits(['selectedTab']);
-
-watch(selectedTab, (newValue) => {
-    emit('selectedTab', newValue);
 });
 </script>
 
