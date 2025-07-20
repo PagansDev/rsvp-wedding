@@ -165,6 +165,49 @@ export const useGifts = () => {
     }
   };
 
+  const deleteGift = async (giftId: number) => {
+    try {
+      const response = await giftService.deleteGift(giftId);
+      if (response.error) {
+        await Swal.fire({
+          title: 'Erro',
+          text: response.error,
+          icon: 'error',
+          toast: true,
+          position: 'bottom-left',
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return false;
+      }
+
+      gifts.value = gifts.value.filter((g) => g.id !== giftId);
+
+      await Swal.fire({
+        title: 'Sucesso!',
+        text: 'Presente excluído com sucesso',
+        icon: 'success',
+        toast: true,
+        position: 'bottom-left',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+
+      return true;
+    } catch (err) {
+      await Swal.fire({
+        title: 'Erro',
+        text: err instanceof Error ? err.message : 'Erro ao excluir presente',
+        icon: 'error',
+        toast: true,
+        position: 'bottom-left',
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return false;
+    }
+  };
+
   return {
     gifts: readonly(gifts),
     isLoading: readonly(isLoading),
@@ -176,5 +219,6 @@ export const useGifts = () => {
     createGift,
     markAsReceived,
     updateGift,
+    deleteGift,
   };
 };

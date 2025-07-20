@@ -29,6 +29,51 @@ export const giftService = {
     }
   },
 
+  async getGiftById(id: number): Promise<ServiceResponse<GiftData>> {
+    try {
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('gift')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        return { data: null, error: error.message };
+      }
+
+      return { data: [data as GiftData], error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
+      };
+    }
+  },
+
+  async deleteGift(id: number): Promise<ServiceResponse<GiftData>> {
+    try {
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('gift')
+        .delete()
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        return { data: null, error: error.message };
+      }
+
+      return { data: [data as GiftData], error: null };
+    } catch (error) {
+      return {
+        data: null,
+        error: error instanceof Error ? error.message : 'Erro desconhecido',
+      };
+    }
+  },
+
   async createGift(giftData: GiftRequest): Promise<ServiceResponse<GiftData>> {
     try {
       const validated = giftRequestSchema.safeParse(giftData);

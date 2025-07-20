@@ -4,7 +4,7 @@
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center justify-between mb-6">
                 <h1 class="text-xl font-bold text-gray-900">
-                    {{ isNew ? 'Novo Presente' : 'Editar Presente' }}
+                    Editar Presente
                 </h1>
                 <NuxtLink to="/admin?tab=gifts" class="text-gray-500 hover:text-gray-700">
                     <Icon name="mdi:close" size="24" />
@@ -42,7 +42,7 @@
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-brand-500 focus:border-brand-500" />
                 </div>
 
-                <div class="flex items-center gap-2">
+                <div class="flex items-center justify-start gap-2">
                     <input v-model="form.is_available" type="checkbox" id="available"
                         class="rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
                     <label for="available" class="text-sm font-medium text-gray-700">
@@ -55,11 +55,6 @@
                         class="flex-1 bg-brand-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed">
                         {{ loading ? 'Salvando...' : 'Salvar' }}
                     </button>
-
-                    <button v-if="!isNew" type="button" @click="handleDelete" :disabled="loading"
-                        class="px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed">
-                        Excluir
-                    </button>
                 </div>
             </form>
         </div>
@@ -69,12 +64,12 @@
 
 <script setup lang="ts">
 import type { GiftRequest } from '~/dtos/gift/giftRequest';
-import type { GiftResponse } from '~/dtos/gift/giftResponse';
+import { giftService } from '~/services/giftService';
+import Swal from 'sweetalert2';
 
 const route = useRoute();
 const router = useRouter();
 
-const isNew = computed(() => route.params.id === 'new');
 const loading = ref(false);
 
 const form = ref<GiftRequest>({
@@ -89,45 +84,39 @@ const form = ref<GiftRequest>({
 });
 
 onMounted(async () => {
-    if (!isNew.value) {
-        await loadGift();
-    }
+    await loadGift();
 });
 
 async function loadGift() {
     try {
         loading.value = true;
-        // TODO: Implement API call
-        // const response = await $fetch<GiftResponse>(`/api/gifts/${route.params.id}`);
+        const id = Number(route.params.id);
+        const { data, error } = await giftService.getGiftById(id);
+        if (error) throw new Error(error);
+        if (!data || data.length === 0) throw new Error('Presente não encontrado');
 
-        // Mock data for testing
-        const mockGift: GiftResponse = {
-            id: Number(route.params.id),
-            name: 'Panela de Pressão',
-            price: '150.00',
-            image_url: '/images/panela.jpg',
-            payment_url: 'https://pix.example.com/panela',
-            external_reference: 'panela-001',
-            quantity: 2,
-            quantity_gifted: 1,
-            is_available: true,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-        };
-
+        const gift = data[0];
         form.value = {
-            name: mockGift.name,
-            price: mockGift.price,
-            image_url: mockGift.image_url || '',
-            payment_url: mockGift.payment_url,
-            external_reference: mockGift.external_reference,
-            quantity: mockGift.quantity,
-            quantity_gifted: mockGift.quantity_gifted,
-            is_available: mockGift.is_available
+            name: gift.name,
+            price: gift.price,
+            image_url: gift.image_url || '',
+            payment_url: gift.payment_url,
+            external_reference: gift.external_reference,
+            quantity: gift.quantity,
+            quantity_gifted: gift.quantity_gifted,
+            is_available: gift.is_available
         };
     } catch (error) {
         console.error('Erro ao carregar presente:', error);
-        // TODO: Show error toast
+        await Swal.fire({
+            title: 'Erro!',
+            text: error instanceof Error ? error.message : 'Erro ao carregar presente',
+            icon: 'error',
+            toast: true,
+            position: 'bottom-left',
+            showConfirmButton: false,
+            timer: 3000
+        });
     } finally {
         loading.value = false;
     }
@@ -137,33 +126,32 @@ async function handleSubmit() {
     try {
         loading.value = true;
 
-        // TODO: Implement Update Gift
-        // await $fetch(`/api/gifts/${route.params.id}`, { method: 'PUT', body: form.value });
+        const id = Number(route.params.id);
+        const { error } = await giftService.updateGift(id, form.value);
+        if (error) throw new Error(error);
 
-        // TODO: Show success toast
-        await router.push('/admin');
+        await Swal.fire({
+            title: 'Sucesso!',
+            text: 'Presente atualizado com sucesso!',
+            icon: 'success',
+            toast: true,
+            position: 'bottom-left',
+            showConfirmButton: false,
+            timer: 1500
+        });
+
+        await router.push('/admin?tab=gifts');
     } catch (error) {
         console.error('Erro ao salvar presente:', error);
-        // TODO: Show error toast
-    } finally {
-        loading.value = false;
-    }
-}
-
-async function handleDelete() {
-    if (!confirm('Tem certeza que deseja excluir este presente?')) {
-        return;
-    }
-
-    try {
-        loading.value = true;
-        // TODO: implement Delete Gift
-        // await $fetch(`/api/gifts/${route.params.id}`, { method: 'DELETE' });
-
-        await router.push('/admin');
-    } catch (error) {
-        console.error('Erro ao excluir presente:', error);
-        // TODO: Show error toast
+        await Swal.fire({
+            title: 'Erro!',
+            text: error instanceof Error ? error.message : 'Erro ao salvar presente',
+            icon: 'error',
+            toast: true,
+            position: 'bottom-left',
+            showConfirmButton: false,
+            timer: 3000
+        });
     } finally {
         loading.value = false;
     }

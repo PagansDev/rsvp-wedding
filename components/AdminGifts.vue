@@ -128,16 +128,24 @@
 
                 <!-- Actions -->
                 <div class="flex justify-between gap-2">
-                    <NuxtLink :to="`/gifts/${gift.id}`"
-                        class="flex items-center justify-center text-brand-600 border border-brand-600 px-3 p-2 rounded text-sm font-medium hover:bg-brand-50 transition-colors text-center">
-                        <Icon name="mdi:square-edit-outline" size="20" />
-                    </NuxtLink>
+                    <div class="flex gap-2">
+                        <NuxtLink :to="`/gifts/${gift.id}`"
+                            class="flex items-center justify-center text-brand-600 border border-brand-600 px-3 p-2 rounded text-sm font-medium hover:bg-brand-50 transition-colors text-center">
+                            <Icon name="mdi:square-edit-outline" size="20" />
+                        </NuxtLink>
+                        <button @click="handleDeleteGift(gift.id, gift.name)"
+                            class=" flex items-center justify-center px-3 py-1 !bg-transparent border-1 !border-rose-700 !rounded-sm">
+                            <Icon name="mdi:delete" size="20" class="text-rose-700" />
+                        </button>
+                    </div>
 
-                    <button v-if="gift.quantity_gifted < gift.quantity" @click="markAsReceived(gift.id)"
-                        class="px-3 py-1 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 transition-colors">
-                        <Icon name="mdi:check" size="14" class="inline mr-1" />
-                        Confirmar Recebimento
-                    </button>
+                    <div class="flex gap-2">
+                        <button v-if="gift.quantity_gifted < gift.quantity" @click="markAsReceived(gift.id)"
+                            class="px-3 py-1 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 transition-colors">
+                            <Icon name="mdi:check" size="14" class="inline mr-1" />
+                            Confirmar Recebimento
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -146,7 +154,8 @@
 
 <script setup lang="ts">
 import { useGifts } from '~/composables/useGifts';
-import {type GiftRequest } from '~/dtos/gift/giftRequest';
+import { type GiftRequest } from '~/dtos/gift/giftRequest';
+import Swal from 'sweetalert2';
 
 const {
     gifts,
@@ -156,7 +165,8 @@ const {
     receivedCount,
     loadGifts,
     createGift,
-    markAsReceived
+    markAsReceived,
+    deleteGift
 } = useGifts();
 
 const showAddForm = ref(false);
@@ -213,5 +223,22 @@ function resetForm() {
         quantity_gifted: 0,
         is_available: true
     });
+}
+
+async function handleDeleteGift(giftId: number, giftName: string) {
+    const result = await Swal.fire({
+        title: 'Confirmar Exclusão',
+        text: `Tem certeza que deseja excluir o presente "${giftName}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sim, excluir!',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (result.isConfirmed) {
+        await deleteGift(giftId);
+    }
 }
 </script>
