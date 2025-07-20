@@ -1,17 +1,5 @@
 import { getSupabase } from '~/utils/supabase';
-
-export interface AuthUser {
-  id: string;
-  email: string;
-  name?: string;
-  avatar_url?: string;
-}
-
-export interface AuthResponse {
-  user: AuthUser | null;
-  session: any | null;
-  error?: string;
-}
+import type { AuthUser, AuthResponse } from '~/dtos/auth/authResponse';
 
 export const authService = {
   async loginWithGoogle(): Promise<AuthResponse> {
@@ -95,10 +83,7 @@ export const authService = {
                 sessionStorage.removeItem('oauth_hash');
               }
             } catch (error) {
-              console.error(
-                'Error saving to localStorage:',
-                error
-              );
+              console.error('Error saving to localStorage:', error);
             }
 
             return {
@@ -136,10 +121,7 @@ export const authService = {
             localStorage.setItem('auth_user', JSON.stringify(user));
           }
         } catch (error) {
-          console.error(
-            'Error saving data to localStorage:',
-            error
-          );
+          console.error('Error saving data to localStorage:', error);
         }
       }
 

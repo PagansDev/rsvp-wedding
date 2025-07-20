@@ -1,5 +1,6 @@
 import { ref, readonly } from 'vue';
-import { authService, type AuthUser } from '~/services/authService';
+import { authService } from '~/services/authService';
+import type { AuthUser } from '~/dtos/auth/authResponse';
 
 export function useAuth() {
   const user = ref<AuthUser | null>(null);
