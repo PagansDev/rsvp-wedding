@@ -95,7 +95,7 @@ const navButtons = computed(() => [
                     Lista de Presentes</a>
                 <a href="/donate"
                     class="block w-full text-center py-3 rounded-lg font-bold bg-brand-200 text-brand-800 hover:bg-brand-100 transition-colors">
-                    Doação
+                    Contribuição
                 </a>
             </div>
       `
