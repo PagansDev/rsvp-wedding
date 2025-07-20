@@ -9,7 +9,7 @@
             <p class="text-brand-800 text-center mb-2 text-sm">Estamos muito felizes em saber que você estará conosco
                 neste dia especial. Sua presença é muito importante para nós!</p>
             <p class="text-brand-800 text-center mb-8 text-sm">Se você quiser nos ajudar a construir nosso futuro, pode
-                contribuir com nossa lista de presentes ou fazer uma doação para nossa nova jornada.</p>
+                contribuir com nossa lista de presentes ou fazer uma contribuição para nossa nova jornada.</p>
             <!-- Botões -->
             <div class="w-full flex flex-col gap-4">
                 <NuxtLink to="/gift"
@@ -17,7 +17,7 @@
                     Lista de Presentes</NuxtLink>
                 <NuxtLink to="/donate"
                     class="block w-full text-center py-3 rounded-lg font-bold bg-brand-200 text-brand-800 hover:bg-brand-100 transition-colors">
-                    Doação
+                    Contribuição
                 </NuxtLink>
             </div>
         </div>

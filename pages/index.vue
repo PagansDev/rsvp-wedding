@@ -87,8 +87,8 @@ const navButtons = computed(() => [
         modalProps: {
             title: 'Lista de Presentes',
             content: `
-            <p class="text-brand-800 text-center mb-8 text-sm">Se você quiser nos ajudar a construir nosso futuro, pode
-                contribuir com nossa lista de presentes ou fazer uma doação para nossa nova jornada.</p>
+            <p class="text-brand-800 text-center mb-8 text-sm">Sua presença já é nosso presente! Mas se você quiser nos ajudar a construir nosso futuro, pode
+                contribuir com nossa lista de presentes ou fazer uma contribuição para nossa nova jornada.</p>
         <div class="w-full flex flex-col gap-4">
                 <a href="/gift"
                     class="block w-full text-center py-3 rounded-lg font-bold bg-brand-400 !text-brand-900 hover:bg-brand-300 transition-colors">
