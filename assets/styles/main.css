@@ -1,0 +1,74 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand-50: #f4f7ee;
+  --color-brand-100: #e7ecdb;
+  --color-brand-200: #d0dbbb;
+  --color-brand-300: #b7c899;
+  --color-brand-400: #95ad6e;
+  --color-brand-500: #789151;
+  --color-brand-600: #5d733d;
+  --color-brand-700: #485932;
+  --color-brand-800: #3c482c;
+  --color-brand-900: #343f28;
+  --color-brand-950: #1a2112;
+}
+
+body.theme-bg {
+  font-family: 'libre baskerville', sans-serif;
+  background: url('../images/desktop-bg.png') no-repeat center center fixed;
+  background-size: cover;
+  @apply text-brand-500;
+}
+
+@media (max-width: 450px) {
+  body.theme-bg {
+    background: url('../images/mobile-bg.png') no-repeat center center fixed;
+    background-size: cover;
+  }
+}
+
+body.texture-bg {
+  font-family: 'libre baskerville', sans-serif;
+  background: url('../images/desktop-texture-bg.png') no-repeat center center
+    fixed;
+  background-size: cover;
+  @apply text-brand-500;
+}
+
+@media (max-width: 450px) {
+  body.texture-bg {
+    background: url('../images/mobile-texture-bg.png') no-repeat center center
+      fixed;
+    background-size: cover;
+  }
+}
+
+h1 {
+  @apply text-2xl font-bold;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  @apply shadow-sm;
+}
+
+/* Estilos para botões */
+button {
+  @apply p-2 bg-brand-500 text-white rounded-lg font-medium;
+  @apply hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
+  @apply transition-colors duration-200;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+input:not([type='checkbox']),
+textarea,
+select {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg bg-white text-brand-600;
+  @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent;
+  @apply placeholder:text-gray-500;
+}
