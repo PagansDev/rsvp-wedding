@@ -7,7 +7,7 @@
             </NuxtLink>
         </div>
 
-        <div class="ml-12 mt-20 md:mt-32 md:ml-0">
+        <div class="ml-12 mt-20 md:mt-32 md:ml-0 w-33 h-33">
             <img src="../assets/images/logo.png" alt="Logo">
         </div>
 
